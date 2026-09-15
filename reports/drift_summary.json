@@ -1,0 +1,99 @@
+{
+  "total_tests": 2,
+  "failed_tests": 2,
+  "all_passed": false,
+  "failed_details": [
+    {
+      "id": "lt",
+      "name": "Count of Drifted Columns: Less 5.000",
+      "description": "Count of Drifted Columns: Actual value 1.000 < 5.000",
+      "metric_config": {
+        "metric_id": "b6cf91b3362a83f5eaf284a11e4e687b",
+        "params": {
+          "type": "evidently:metric_v2:DriftedColumnsCount",
+          "tests": [
+            {
+              "type": "evidently:test_v2:LessThanMetricTest",
+              "is_critical": true,
+              "threshold": 5.0
+            }
+          ],
+          "share_tests": [
+            {
+              "type": "evidently:test_v2:LessThanMetricTest",
+              "is_critical": true,
+              "threshold": 0.25
+            }
+          ],
+          "drift_share": 0.5
+        }
+      },
+      "test_config": {
+        "type": "evidently:test_v2:LessThanMetricTest",
+        "is_critical": true,
+        "alias": null,
+        "label_filters": null,
+        "threshold": 5.0
+      },
+      "status": "SUCCESS",
+      "bound_test": {
+        "type": "evidently:bound_test:CountBoundTest",
+        "test": {
+          "type": "evidently:test_v2:LessThanMetricTest",
+          "is_critical": true,
+          "alias": null,
+          "label_filters": null,
+          "threshold": 5.0
+        },
+        "metric_fingerprint": "b6cf91b3362a83f5eaf284a11e4e687b",
+        "is_count": true
+      }
+    },
+    {
+      "id": "lt",
+      "name": "Share of Drifted Columns: Less 0.250",
+      "description": "Share of Drifted Columns: Actual value 0.032 < 0.250",
+      "metric_config": {
+        "metric_id": "b6cf91b3362a83f5eaf284a11e4e687b",
+        "params": {
+          "type": "evidently:metric_v2:DriftedColumnsCount",
+          "tests": [
+            {
+              "type": "evidently:test_v2:LessThanMetricTest",
+              "is_critical": true,
+              "threshold": 5.0
+            }
+          ],
+          "share_tests": [
+            {
+              "type": "evidently:test_v2:LessThanMetricTest",
+              "is_critical": true,
+              "threshold": 0.25
+            }
+          ],
+          "drift_share": 0.5
+        }
+      },
+      "test_config": {
+        "type": "evidently:test_v2:LessThanMetricTest",
+        "is_critical": true,
+        "alias": null,
+        "label_filters": null,
+        "threshold": 0.25
+      },
+      "status": "SUCCESS",
+      "bound_test": {
+        "type": "evidently:bound_test:CountBoundTest",
+        "test": {
+          "type": "evidently:test_v2:LessThanMetricTest",
+          "is_critical": true,
+          "alias": null,
+          "label_filters": null,
+          "threshold": 0.25
+        },
+        "metric_fingerprint": "b6cf91b3362a83f5eaf284a11e4e687b",
+        "is_count": false
+      }
+    }
+  ]
+}
