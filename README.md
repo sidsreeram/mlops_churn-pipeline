@@ -28,7 +28,25 @@ A production-grade, reproducible MLOps platform built to predict customer churn.
    │ (Inference / Live Traffic)                                  │ (Automated Gates)
    ▼                                                             │
 [Evidently AI Monitoring] ──► [Drift Report & Alerts]    [GitHub Actions CI/CD]
-🧰 Tech StackComponentTechnologyRoleData VersioningDVCTracks raw and processed dataset hashes alongside GitExperiment TrackingMLflowTracks parameters, ROC-AUC/F1 metrics, and model artifactsModel RegistryMLflow RegistryManages versioning and dynamic production aliases (@champion)Pipeline OrchestrationPrefect 3.xSchedules, retries, and executes DAG workflowsServing APIFastAPI + UvicornHigh-performance inference endpoints with Pydantic validationTesting & Quality GatesPytestValidates schema integrity, endpoints, and deployment thresholdsCI/CDGitHub ActionsAutomated testing, validation, and Docker container buildsContainerizationDockerContainerized deployment across local and cloud environmentsMonitoring & DriftEvidently AIStatistical distribution drift detection and HTML reports📁 Repository StructurePlaintextmlops-churn-pipeline/
+
+## 🧰 Tech Stack
+
+| Lifecycle Stage | Tool / Framework | Purpose in Pipeline |
+| :--- | :--- | :--- |
+| **Data Versioning** | ![DVC](https://img.shields.io/badge/-DVC-945DD6?style=flat-square&logo=dvc&logoColor=white) | Tracks data artifacts and raw/processed hashes without bloating Git |
+| **Experiment Tracking** | ![MLflow](https://img.shields.io/badge/-MLflow-0194E2?style=flat-square&logo=mlflow&logoColor=white) | Logs metrics, hyperparameter runs, and model artifacts locally via SQLite |
+| **Model Registry** | **MLflow Registry** | Manages versioning and dynamic production aliases (`@champion`) |
+| **Workflow Orchestration** | ![Prefect](https://img.shields.io/badge/-Prefect-024DFD?style=flat-square&logo=prefect&logoColor=white) | Orchestrates DAG flows with retry policies, state management, and logging |
+| **Serving & Inference** | ![FastAPI](https://img.shields.io/badge/-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white) | Exposes low-latency REST endpoints with Pydantic request validation |
+| **Containerization** | ![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white) | Packages inference dependencies and runtime environment into portable images |
+| **Testing & Gates** | ![Pytest](https://img.shields.io/badge/-Pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white) | Executes data contract checks and blocks deployment if ROC-AUC < 0.80 |
+| **CI/CD Automation** | ![GitHub Actions](https://img.shields.io/badge/-GitHub%20Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white) | Automates validation and builds/pushes Docker images to GHCR |
+| **Data & Model Monitoring** | **Evidently AI** | Generates statistical feature drift reports (KS / Chi-sq) and alerts |
+
+
+📁 Repository Structure
+
+
 ├── .github/
 │   └── workflows/
 │       └── ci-cd.yml           # GitHub Actions pipeline (test, validate, build)
@@ -54,7 +72,10 @@ A production-grade, reproducible MLOps platform built to predict customer churn.
 ├── pytest.ini                  # Pytest configuration
 ├── requirements.txt            # Locked Python dependencies
 └── README.md
-⚡ Quickstart Guide1. Prerequisites & Environment SetupEnsure Python 3.10 or 3.11 is installed.Bash# Clone the repository
+
+⚡ Quickstart Guide
+
+1. Prerequisites & Environment SetupEnsure Python 3.10 or 3.11 is installed.Bash# Clone the repository
 git clone [https://github.com/](https://github.com/)<YOUR_USERNAME>/mlops-churn-pipeline.git
 cd mlops-churn-pipeline
 
@@ -69,11 +90,14 @@ source venv/bin/activate
 # Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
+
 2. Run the Automated Pipeline (Prefect)Execute the full orchestration flow (download data, preprocess, train XGBoost model, evaluate metrics, and promote the @champion model alias):Bashpython src/pipeline.py
 To view the execution graph and logs in the local Prefect dashboard:Bashprefect server start
 # Access at [http://127.0.0.1:4200](http://127.0.0.1:4200)
+
 3. Track Experiments (MLflow)Inspect hyperparameter tuning runs, compare models, and review registered versions:Bashmlflow ui --backend-store-uri sqlite:///mlflow.db
 # Access at [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
 4. Serve Predictions (FastAPI)Launch the REST API server:Bashuvicorn src.app:app --host 127.0.0.1 --port 8000 --reload
 Interactive Swagger UI: Visit http://127.0.0.1:8000/docsHealth Check: GET http://127.0.0.1:8000/healthInference Endpoint: POST http://127.0.0.1:8000/predictSample Request Payload:JSON{
   "SeniorCitizen": 0,
@@ -112,8 +136,10 @@ Sample Response:JSON{
   "churn_probability": 0.6842,
   "risk_level": "High"
 }
+
 5. Automated Testing & Quality GatesRun integration test suite:Bashpython -m pytest tests/
 Run model deployment gate (requires champion model ROC-AUC $\ge 0.80$):Bashpython src/validate_model.py
+
 6. Production Drift Monitoring (Evidently AI)Evaluate production data shifts against baseline distributions and generate reports:Bashpython src/monitor_drift.py
 Interactive Report: Open reports/drift_report.html in your browser.Test Summary: Review reports/drift_summary.json for drift alert triggers.7. Docker DeploymentBuild and run the container locally:Bash# Build Docker image
 docker build -t churn-api:latest .
