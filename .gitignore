@@ -3,3 +3,5 @@
 venv/ 
 mlflow.db 
 mlruns/ 
+.prefect/ 
+*.prefect 
